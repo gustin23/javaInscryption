@@ -1,6 +1,4 @@
 package com.example.javainscryption.Entities;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -15,11 +13,10 @@ public class Tribu {
     private String efecto;
 
     @ManyToMany(mappedBy = "tribus")
-    @JsonBackReference
+    @JsonManagedReference
     private List<Escriba> escribas;
 
     @OneToMany(mappedBy = "tribu")
-    @JsonManagedReference // Controla la serialización de las cartas
     private List<Carta> cartas;
 
     public List<Carta> getCartas() {

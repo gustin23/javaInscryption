@@ -1,6 +1,4 @@
 package com.example.javainscryption.Entities;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -21,7 +19,6 @@ public class Escriba {
             joinColumns = @JoinColumn(name = "escriba_id"),
             inverseJoinColumns = @JoinColumn(name = "tribu_id")
     )
-    @JsonManagedReference
     private List<Tribu> tribus;
 
     public List<Tribu> getTribus() {

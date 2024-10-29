@@ -1,6 +1,4 @@
 package com.example.javainscryption.Entities;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -16,7 +14,6 @@ public class Carta {
 
     @ManyToOne
     @JoinColumn(name = "tribu_id")
-    @JsonBackReference
     private Tribu tribu;
 
     private int vida;
@@ -35,7 +32,6 @@ public class Carta {
     @JoinColumn(name = "sello_id")
     private Sello sello;
 
-    @JsonManagedReference
     public List<Acto> getActos() {
         return actos;
     }

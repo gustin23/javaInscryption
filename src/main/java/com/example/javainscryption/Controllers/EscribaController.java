@@ -1,43 +1,61 @@
 package com.example.javainscryption.Controllers;
 
-
-import com.example.javainscryption.Entities.Escriba;
-import com.example.javainscryption.Repositories.EscribaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.javainscryption.dto.EscribaDTO;
+import com.example.javainscryption.Service.EscribaService;
+import com.example.javainscryption.mapper.EscribaMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/escribas")
 public class EscribaController {
-    @Autowired
-    private EscribaRepository escribaRepository;
 
+    private final EscribaService escribaService;
+    private final EscribaMapper escribaMapper;
+
+    public EscribaController(EscribaService escribaService, EscribaMapper escribaMapper) {
+        this.escribaService = escribaService;
+        this.escribaMapper = escribaMapper;
+    }
+
+    // Obtener todos los escribas
     @GetMapping
-    public List<Escriba> getAllEscribas(){return escribaRepository.findAll();}
+    public ResponseEntity<List<EscribaDTO>> getAllEscribas() {
+        List<EscribaDTO> escribas = escribaService.findAll()
+                .stream()
+                .map(escribaMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(escribas);
+    }
 
+    // Obtener un escriba por ID
     @GetMapping("/{id}")
-    public Escriba getEscribaById(@PathVariable Long id){
-        return escribaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontro el Escriba con el ID: " + id));
+    public ResponseEntity<EscribaDTO> getEscribaById(@PathVariable Long id) {
+        EscribaDTO escribaDTO = escribaMapper.toDto(escribaService.findById(id));
+        return ResponseEntity.ok(escribaDTO);
     }
 
+    // Obtener un escriba con tribus (y cartas si es necesario)
     @GetMapping("/{id}/tribus")
-    public Escriba getEscribaWithTribusAndCartas(@PathVariable Long id) {
-        Escriba escriba = escribaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Escriba no encontrado con id " + id));
-
-        // Devuelve el escriba con las tribus y las cartas de cada tribu
-        return escriba;
+    public ResponseEntity<EscribaDTO> getEscribaWithTribusAndCartas(@PathVariable Long id) {
+        EscribaDTO escribaDTO = escribaMapper.toDto(escribaService.findByIdWithTribus(id));
+        return ResponseEntity.ok(escribaDTO);
     }
 
+    // Crear un nuevo escriba
     @PostMapping
-    public Escriba createEscriba(@RequestBody Escriba escriba) { return escribaRepository.save(escriba); }
-
-    @DeleteMapping
-    public void deleteAllEscribas() {
-        escribaRepository.deleteAll();
+    public ResponseEntity<EscribaDTO> createEscriba(@RequestBody EscribaDTO escribaDTO) {
+        EscribaDTO createdEscriba = escribaMapper.toDto(escribaService.save(escribaMapper.toEntity(escribaDTO)));
+        return ResponseEntity.ok(createdEscriba);
     }
 
+    // Eliminar todos los escribas
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllEscribas() {
+        escribaService.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
 }
