@@ -1,5 +1,6 @@
 package com.example.javainscryption.Controllers;
 
+import com.example.javainscryption.dto.CartaDTO;
 import com.example.javainscryption.dto.EscribaDTO;
 import com.example.javainscryption.Service.EscribaService;
 import com.example.javainscryption.mapper.EscribaMapper;
@@ -30,6 +31,16 @@ public class EscribaController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(escribas);
     }
+
+    @GetMapping("/{escribaId}/tribus/{tribuId}/cartas")
+    public ResponseEntity<List<CartaDTO>> getCartasByEscribaAndTribu(
+            @PathVariable Long escribaId,
+            @PathVariable Long tribuId) {
+
+        List<CartaDTO> cartas = escribaService.getCartasByEscribaAndTribu(escribaId, tribuId);
+        return ResponseEntity.ok(cartas);
+    }
+
 
     // Obtener un escriba por ID
     @GetMapping("/{id}")

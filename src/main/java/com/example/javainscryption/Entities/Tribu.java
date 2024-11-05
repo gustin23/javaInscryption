@@ -13,7 +13,6 @@ public class Tribu {
     private String efecto;
 
     @ManyToMany(mappedBy = "tribus")
-    @JsonManagedReference
     private List<Escriba> escribas;
 
     @OneToMany(mappedBy = "tribu")

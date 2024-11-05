@@ -11,8 +11,18 @@ public class CartaDTO {
     private int poder;
     private List<Long> actosIds; // Almacena los IDs de los actos
     private Long selloId; // Almacena solo el ID del sello
+    private List<String> actosNombres;
 
     // Getters y Setters
+
+
+    public List<String> getActosNombres() {
+        return actosNombres;
+    }
+
+    public void setActosNombres(List<String> actosNombres) {
+        this.actosNombres = actosNombres;
+    }
 
     public Long getId() {
         return id;

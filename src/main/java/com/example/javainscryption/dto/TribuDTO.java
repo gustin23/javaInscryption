@@ -6,16 +6,6 @@ public class TribuDTO {
     private String efecto;
 
     // Getters y Setters
-
-
-    public String getEfecto() {
-        return efecto;
-    }
-
-    public void setEfecto(String efecto) {
-        this.efecto = efecto;
-    }
-
     public Long getId() {
         return id;
     }
@@ -30,5 +20,13 @@ public class TribuDTO {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getEfecto() {
+        return efecto;
+    }
+
+    public void setEfecto(String efecto) {
+        this.efecto = efecto;
     }
 }

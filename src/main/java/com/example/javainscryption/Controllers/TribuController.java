@@ -1,31 +1,34 @@
 package com.example.javainscryption.Controllers;
 
 import com.example.javainscryption.Entities.Tribu;
-import com.example.javainscryption.Repositories.TribuRepository;
-import com.example.javainscryption.Service.SubordinadoService;
 import com.example.javainscryption.Service.TribuService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.javainscryption.dto.TribuDTO;
+import com.example.javainscryption.mapper.TribuMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tribus")
 public class TribuController {
-    @Autowired
-    private TribuRepository tribuRepository;
 
-    @Autowired
-    TribuService tribuService;
+    private final TribuService tribuService;
+    private final TribuMapper tribuMapper;
 
-    @GetMapping
-    public List<Tribu> getAllTribu(){
-        return tribuRepository.findAll();
+    public TribuController(TribuService tribuService, TribuMapper tribuMapper) {
+        this.tribuService = tribuService;
+        this.tribuMapper = tribuMapper;
     }
 
-    @PostMapping
-    public List<Tribu> createTribu(@RequestBody List<Tribu> tribus){
-        return tribuRepository.saveAll(tribus);
+    @GetMapping
+    public ResponseEntity<List<TribuDTO>> getAllEscribas() {
+        List<TribuDTO> tribus = tribuService.findAll()
+                .stream()
+                .map(tribuMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(tribus);
     }
 
 }

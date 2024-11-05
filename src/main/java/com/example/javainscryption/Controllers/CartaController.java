@@ -30,19 +30,23 @@ public class CartaController {
     }
 
     // Crear cartas a partir de una lista de CartaDTO
+
     @PostMapping
-    public List<CartaDTO> createCarta(@RequestBody List<CartaDTO> cartasDTO) {
-        // Convertimos de DTO a entidad, guardamos y luego convertimos el resultado a DTO
-        List<Carta> cartas = cartasDTO.stream()
-                .map(cartaMapper::toEntity)
+    public List<CartaDTO> createCarta(@RequestBody List<CartaDTO> cartaDTOs) {
+        return cartaDTOs.stream()
+                .map(cartaService::createCarta)
                 .toList();
-        List<Carta> savedCartas = cartaService.saveAll(cartas);
-        return cartaMapper.toDtoList(savedCartas); // Devolvemos como lista de DTOs
     }
 
     // Eliminar todas las cartas
     @DeleteMapping
     public void deleteAllCartas() {
         cartaService.deleteAll();
+    }
+
+    @GetMapping("/mano")
+    public List<CartaDTO> getManoAleatoria() {
+        List<Carta> manoAleatoria = cartaService.obtenerManoAleatoria();
+        return cartaMapper.toDtoList(manoAleatoria);
     }
 }

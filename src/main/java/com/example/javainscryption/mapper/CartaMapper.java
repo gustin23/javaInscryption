@@ -12,17 +12,17 @@ import java.util.List;
 public interface CartaMapper {
     CartaMapper INSTANCE = Mappers.getMapper(CartaMapper.class);
 
-    // Convertir de Carta a CartaDTO
     @Mapping(source = "tribu.id", target = "tribuId")
     @Mapping(target = "actosIds", expression = "java(carta.getActos().stream().map(acto -> acto.getId()).toList())")
     @Mapping(source = "sello.id", target = "selloId")
+    @Mapping(target = "actosNombres", expression = "java(carta.getActos().stream().map(acto -> acto.getNombre()).toList())")
     CartaDTO toDto(Carta carta);
 
-    // Convertir de CartaDTO a Carta
     @Mapping(source = "tribuId", target = "tribu.id")
-    @Mapping(target = "actos", ignore = true) // Asumimos que se manejará después
+    @Mapping(target = "actos", ignore = true) // Se manejará en el servicio
     @Mapping(source = "selloId", target = "sello.id")
     Carta toEntity(CartaDTO cartaDTO);
 
     List<CartaDTO> toDtoList(List<Carta> cartas);
 }
+

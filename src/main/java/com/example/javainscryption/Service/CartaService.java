@@ -1,22 +1,42 @@
 package com.example.javainscryption.Service;
 
+import com.example.javainscryption.Entities.Acto;
 import com.example.javainscryption.Entities.Carta;
+import com.example.javainscryption.Repositories.ActoRepository;
 import com.example.javainscryption.Repositories.CartaRepository;
 import com.example.javainscryption.dto.CartaDTO;
 import com.example.javainscryption.mapper.CartaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class CartaService {
 
-    @Autowired
-    private CartaRepository cartaRepository;
+
+    private final CartaRepository cartaRepository;
+    private final ActoRepository actoRepository;
+    private final CartaMapper cartaMapper;
+
+    public CartaDTO createCarta(CartaDTO cartaDTO) {
+        Carta carta = cartaMapper.toEntity(cartaDTO);
+
+        // Cargar los actos usando los IDs de actos
+        List<Acto> actos = actoRepository.findAllById(cartaDTO.getActosIds());
+        carta.setActos(actos);
+
+        Carta savedCarta = cartaRepository.save(carta);
+        return cartaMapper.toDto(savedCarta);
+    }
 
     @Autowired
-    private CartaMapper cartaMapper;
+    public CartaService(CartaRepository cartaRepository, ActoRepository actoRepository, CartaMapper cartaMapper) {
+        this.cartaRepository = cartaRepository;
+        this.actoRepository = actoRepository;
+        this.cartaMapper = cartaMapper;
+    }
 
     // Crear una nueva carta
     public Carta crearCarta(Carta carta) {
@@ -56,7 +76,26 @@ public class CartaService {
         return cartaMapper.toDtoList(cartas);
     }
 
+    public List<CartaDTO> getAllCartas() {
+        return cartaMapper.toDtoList(cartaRepository.findAll());
+    }
+
     public List<Carta> saveAll(List<Carta> cartas) {
         return cartaRepository.saveAll(cartas);
+    }
+
+    public List<Carta> obtenerManoAleatoria() {
+        List<Carta> todasLasCartas = cartaRepository.findAll();
+
+        // Verificar que hay suficientes cartas disponibles
+        if (todasLasCartas.size() < 4) {
+            throw new RuntimeException("No hay suficientes cartas para obtener una mano de 4 cartas.");
+        }
+
+        // Mezclar las cartas para obtener un orden aleatorio
+        Collections.shuffle(todasLasCartas);
+
+        // Seleccionar las primeras cuatro cartas
+        return todasLasCartas.subList(0, 4);
     }
 }

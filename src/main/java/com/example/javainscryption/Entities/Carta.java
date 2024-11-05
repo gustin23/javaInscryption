@@ -1,7 +1,9 @@
 package com.example.javainscryption.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +27,7 @@ public class Carta {
             joinColumns = @JoinColumn(name = "carta_id"),
             inverseJoinColumns = @JoinColumn(name = "acto_id")
     )
-    private List<Acto> actos;
+    private List<Acto> actos; // Inicialización aquí
 
 
     @ManyToOne

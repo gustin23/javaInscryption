@@ -1,13 +1,6 @@
 package com.example.javainscryption.Entities;
 
-
-
-import com.example.javainscryption.Entities.Subordinado;
-import com.example.javainscryption.Repositories.SubordinadoRepository;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 public class Subordinado {

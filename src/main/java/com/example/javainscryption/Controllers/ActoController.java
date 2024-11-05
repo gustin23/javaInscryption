@@ -1,41 +1,32 @@
 package com.example.javainscryption.Controllers;
 
-import com.example.javainscryption.Entities.Acto;
-import com.example.javainscryption.Entities.Carta;
-import com.example.javainscryption.Repositories.ActoRepository;
-import com.example.javainscryption.Repositories.CartaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.javainscryption.Service.ActoService;
+import com.example.javainscryption.dto.ActoDTO;
+import com.example.javainscryption.mapper.ActoMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/actos")
 public class ActoController {
 
-    @Autowired
-    private ActoRepository actoRepository;
+    private final ActoService actoService;
+    private final ActoMapper actoMapper;
 
-    @Autowired
-    private CartaRepository cartaRepository;
-
-    @GetMapping
-    public List<Acto> getAllActos() {
-        return actoRepository.findAll();
+    public ActoController(ActoService actoService, ActoMapper actoMapper) {
+        this.actoService = actoService;
+        this.actoMapper = actoMapper;
     }
 
-    // Asociar cartas a un acto existente
-    @PostMapping("/{id}/cartas")
-    public Acto addCartasToActo(@PathVariable Long id, @RequestBody List<Long> cartasIds) {
-        Optional<Acto> optionalActo = actoRepository.findById(id);
-        if (optionalActo.isPresent()) {
-            Acto acto = optionalActo.get();
-            List<Carta> cartas = cartaRepository.findAllById(cartasIds);
-            acto.getCartas().addAll(cartas);
-            return actoRepository.save(acto);
-        } else {
-            throw new RuntimeException("Acto no encontrado");
-        }
+    @GetMapping
+    public ResponseEntity<List<ActoDTO>> getAllActos() {
+        List<ActoDTO> actos = actoService.findAll()
+                .stream()
+                .map(actoMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(actos);
     }
 }
