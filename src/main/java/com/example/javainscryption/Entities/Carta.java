@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Carta {
@@ -99,4 +100,20 @@ public class Carta {
     public void setSello(Sello sello) {
         this.sello = sello;
     }
+
+    // Sobrescribir equals
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Carta carta = (Carta) obj;
+        return id != null && id.equals(carta.id); // Compara por ID
+    }
+
+    // Sobrescribir hashCode
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }

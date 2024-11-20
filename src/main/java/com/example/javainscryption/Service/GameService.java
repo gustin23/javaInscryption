@@ -25,9 +25,9 @@ public class GameService {
 
         // Mostrar las cartas de la mano inicial
         System.out.println("Mano inicial: ");
-        manoInicial.forEach(carta -> System.out.println("Carta: " + carta.getNombre()));
+        manoInicial.forEach(carta -> System.out.println("Carta: " + carta.getNombre() + " ID: " + carta.getId()));
 
-        // Configurar el estado del juego (puede incluir crear un objeto GameState)
+        // Configurar el estado del juego
         GameState estadoJuego = new GameState();
         estadoJuego.setMano(manoInicial);
         estadoJuego.setVidaJugador(vidaJugador);
